@@ -8,26 +8,48 @@ html
     script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js')
     script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
     
+    link(rel="stylesheet", href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
+    
     link(type='text/css', rel='stylesheet', href='main.css')
       
   body
     div.container
       div.row
-        div.col-md-2.header.icon
+        div.col-md-2.header.icon.top-left-pane
+          h4.icon-name mmmarkdown
+          p.icon-subtitle a yummy markdown editor
         div.col-md-10.header
           div.row
-            div.col-md-12.header.filename
+            div.col-md-12.header.filename-title
+              div.box-left.col-md-9
+                h5.filename ExampleFile.md
+              div.box-center.col-md-2
+                h5.word-count 100 words
+              div.box-center.col-md-1
+                h5.save Save
           div.row
-            div.col-md-6.header.markdown-title
-            div.col-md-6.header.preview-title
+            div.col-md-6.header.markdown-title 
+              div.box-left MARKDOWN
+            div.col-md-6.header.preview-title 
+              div.box-left PREVIEW
       div.row
         div.col-md-2.content.sidepane
           table.table
             tr 
-              td John
+              td Groceries.md
+                span
+                  i.fa.fa-trash(aria-hidden='true')
             tr 
-              td Jacob
+              td Todos.md
+                span
+                  i.fa.fa-trash(aria-hidden='true')
             tr 
-              td Jordan
+              td ExampleFile.md
+                span
+                  i.fa.fa-trash(aria-hidden='true')
+            tr 
+              td.new-file New File
+                span
+                  i.fa.fa-plus(aria-hidden='true')
         div.col-md-5.content.markdown-content
         div.col-md-5.content.preview-content
