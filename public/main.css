@@ -1,0 +1,11 @@
+
+.col-md-2, .col-md-4 {
+  background-color: #e1f0d5;
+  border: 1px solid black;
+  height: 100px;
+}
+
+h1 {
+  color: orange;
+  border: 1px solid black;
+}
