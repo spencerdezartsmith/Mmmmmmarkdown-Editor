@@ -1,0 +1,23 @@
+{
+  "name": "hello-web-servers",
+  "version": "1.0.0",
+  "description": "Markdown Editor",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/self-jw/hello-web-servers.git"
+  },
+  "author": "Jolly Walia and Spencer Dezart-Smith",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/self-jw/hello-web-servers/issues"
+  },
+  "homepage": "https://github.com/self-jw/hello-web-servers#readme",
+  "dependencies": {
+    "express": "^4.15.2",
+    "pug": "^2.0.0-rc.1"
+  }
+}
