@@ -1,9 +1,11 @@
 
 // Express web server.
 var express = require('express');
+var bodyParser = require('body-parser');
 
 var app = express();
 app.use(express.static('public'));
+app.use(bodyParser.json());
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
@@ -14,7 +16,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', (req, res) => {
-  console.log('Hello World');
+  console.log(req.body);
 });
 
 app.listen(3000, () => {
