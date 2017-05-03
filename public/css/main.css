@@ -120,7 +120,6 @@ i {
 	border: none;
 	background-color: #fafafa;
 	padding: 10px;
-	height: 100%;
 	resize: none;
 }
 
@@ -128,4 +127,8 @@ i {
     border-color: #cccccc;
     -webkit-box-shadow: none;
     box-shadow: none;
+}
+
+textarea.form-control {
+  height: 100%;
 }
