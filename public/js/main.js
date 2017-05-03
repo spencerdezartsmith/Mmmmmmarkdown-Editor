@@ -11,9 +11,10 @@ $(document).ready(() => {
 
 });
 
+// Write in the preview pane.
 function updateInput(input, preview) {
   input.keyup(function () {
-    preview.innerHTML = this.value;
+    preview.innerHTML = marked(this.value);
   });
 }
 

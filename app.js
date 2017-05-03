@@ -1,4 +1,5 @@
 
+// Express web server.
 var express = require('express');
 
 var app = express();
@@ -7,6 +8,7 @@ app.use(express.static('public'));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
 
+// Set the routes.
 app.get('/', (req, res) => {
   res.render('index');
 });
