@@ -18,6 +18,7 @@
   "homepage": "https://github.com/self-jw/hello-web-servers#readme",
   "dependencies": {
     "express": "^4.15.2",
+    "marked": "^0.3.6",
     "pug": "^2.0.0-rc.1"
   },
   "devDependencies": {
