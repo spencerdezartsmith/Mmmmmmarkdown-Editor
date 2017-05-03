@@ -13,6 +13,10 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
+app.post('/', (req, res) => {
+  console.log('Hello World');
+});
+
 app.listen(3000, () => {
   console.log('Server is listening on port 3000.');
 });
