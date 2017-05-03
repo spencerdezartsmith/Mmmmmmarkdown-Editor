@@ -1,7 +1,12 @@
 $(document).ready(() => {
-	let preview = $('.preview-content')[0];
-  // Update text into preview window in realtime
-	$('textarea.form-control').keyup(function() {
+	let previewField = $('.preview-content')[0];
+  let editorInput = $('textarea.form-control')
+
+  previewInput(editorInput, previewField);
+});
+
+function previewInput(input, preview) {
+  input.keyup(function() {
 		preview.innerHTML = this.value;
 	});
-});
+}
