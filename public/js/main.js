@@ -24,11 +24,11 @@ function addNewFile(tableEl, addFileEl, fileName) {
   let idx = addFileEl.index(this);
 
   addFileEl.on('click', function () {
-    tableEl.find('tr:last').before('<tr><td>untitled.md<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
-		fileName.html('untitled.md');
+	tableEl.find('tr:last').before('<tr><td>untitled.md<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
+  fileName.html('untitled.md');
 
-		let newFileName = new Promise((resolve) => {
-			setTimeout( () => {
+	let newFileName = new Promise((resolve) => {
+		setTimeout( () => {
 				resolve(prompt('Name your markdown file'));
 			}, 1000);
 		});
@@ -42,7 +42,7 @@ function addNewFile(tableEl, addFileEl, fileName) {
 }
 
 function saveFile(saveBtn, fileName, previewContent) {
-	saveBtn.click(function() {
+  saveBtn.click(function () {
 		let trimString = previewContent.textContent.trim();
 		let data = { data: trimString,
 		 						 file: fileName[0].textContent
@@ -50,7 +50,7 @@ function saveFile(saveBtn, fileName, previewContent) {
 
 		console.log(data);
 
-		fetch('/', {
+		fetch('/newfile', {
 			method: 'post',
 			headers: {
 				'Accept': 'application/json',
