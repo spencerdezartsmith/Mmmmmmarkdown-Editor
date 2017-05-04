@@ -42,7 +42,7 @@ function addNewFile(tableEl, addFileEl, fileName) {
 }
 
 function saveFile(saveBtn, fileName, previewContent) {
-	saveBtn.click(function() {
+  saveBtn.click(function () {
 		let trimString = previewContent.textContent.trim();
 		let data = { data: trimString,
 		 						 file: fileName[0].textContent
