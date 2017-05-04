@@ -1,5 +1,6 @@
 $(document).ready(() => {
 
+	let saveEl = $('.save');
   let previewField = $('.preview-content')[0];
   let editorInput = $('textarea.form-control');
   let table = $('.table');
@@ -8,6 +9,7 @@ $(document).ready(() => {
 
   updateInput(editorInput, previewField);
   addNewFile(table, newFile, fileName);
+  saveFile(saveEl, fileName, previewField);
 
 });
 
@@ -37,4 +39,30 @@ function addNewFile(tableEl, addFileEl, fileName) {
 			fileName.text(result);
 		});
   });
+}
+
+function saveFile(saveBtn, fileName, previewContent) {
+	saveBtn.click(function() {
+		let trimString = previewContent.textContent.trim();
+		let data = { data: trimString,
+		 						 file: fileName[0].textContent
+							 };
+
+		console.log(data);
+
+		fetch('/', {
+			method: 'post',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		})
+		.then(function(response) {
+			console.log(response);
+		})
+		.catch(function(e) {
+			console.log(e);
+		})
+	});
 }
