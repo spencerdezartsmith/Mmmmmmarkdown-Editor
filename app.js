@@ -2,6 +2,7 @@
 // Express web server.
 var express = require('express');
 var bodyParser = require('body-parser');
+var fs = require('fs');
 
 var app = express();
 app.use(express.static('public'));
@@ -16,7 +17,15 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', (req, res) => {
-  console.log(req.body);
+  // File directory.
+  let dataDir = '/Users/jwalia/programming/web-dev/hello-web-servers/data/';
+  let dir = dataDir + req.body.file;
+
+  // Open file to write.
+  let writeStream = fs.createWriteStream(dir);
+  writeStream.write(req.body.data);
+  writeStream.end();
+
 });
 
 app.listen(3000, () => {
