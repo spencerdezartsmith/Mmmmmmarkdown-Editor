@@ -13,7 +13,23 @@ app.set('view engine', 'pug');
 
 // Set the routes.
 app.get('/', (req, res) => {
-  res.render('index');
+  // Get the markdown files in the data directory.
+  let dir = __dirname + '/data/';
+  fs.readdir(dir, (err, files) => {
+    if (err) {
+      throw err;
+    } else {
+      res.render('index', { files: files });
+    }
+  });
+
+});
+
+app.get('/:file', (req, res) => {
+  let file  = __dirname + '/data/' + req.params.file + '.md';
+
+  Promise.resolve(fs.readFileSync(file, 'utf8'))
+    .then(res.send.bind(res));
 });
 
 app.post('/newfile', (req, res) => {
@@ -24,7 +40,6 @@ app.post('/newfile', (req, res) => {
   fs.close(fd);
 
   res.sendStatus(200);
-
 });
 
 app.listen(3000, () => {
