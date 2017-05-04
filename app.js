@@ -17,14 +17,23 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', (req, res) => {
-  // File directory.
   let dataDir = '/Users/jwalia/programming/web-dev/hello-web-servers/data/';
   let dir = dataDir + req.body.file;
 
-  // Open file to write.
-  let writeStream = fs.createWriteStream(dir);
-  writeStream.write(req.body.data);
-  writeStream.end();
+  // fs.open(dir, 'w', (err, fd) => {
+  //   if (err) throw err;
+  //   console.log(dir + ' has been saved.');
+  //   console.log('fd : ' + fd);
+  // });
+
+  fs.writeFile(dir, req.body.data, (error) => {
+    if (error) throw error;
+    console.log(dir + ' has been saved.');
+  });
+
+  // let writeStream = fs.createWriteStream(dir);
+  // writeStream.write(req.body.data);
+  // writeStream.end();
 
 });
 
