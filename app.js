@@ -17,16 +17,13 @@ app.get('/', (req, res) => {
 });
 
 app.post('/newfile', (req, res) => {
-  let dataDir = '/Users/jwalia/programming/web-dev/hello-web-servers/data/';
-  let dir = dataDir + req.body.file;
+  let dir = __dirname + '/data/' + req.body.file;
+  let fd = fs.openSync(dir, 'ax+');
 
-  fs.writeFile(dir, req.body.data, { flag: 'wx' }, (error) => {
-    if (error) throw error;
-    console.log(dir + ' has been saved.');
-  });
+  fs.writeSync(fd, req.body.data);
+  fs.close(fd);
 
-  // Success
-  res.render('index');
+  res.sendStatus(200);
 
 });
 
