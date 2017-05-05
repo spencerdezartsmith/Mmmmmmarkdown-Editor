@@ -42,6 +42,20 @@ app.post('/newfile', (req, res) => {
   res.sendStatus(200);
 });
 
+app.delete('/:file', (req, res) => {
+  let file  = __dirname + '/data/' + req.params.file + '.md';
+  let dir = __dirname + '/data/';
+  let files;
+
+  fs.unlink(file, (err) => {
+    if (err) {
+      res.sendStatus(500);
+    } else {
+      res.sendStatus(200);
+    }
+  });
+});
+
 app.listen(3000, () => {
   console.log('Server is listening on port 3000.');
 });
