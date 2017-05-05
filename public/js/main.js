@@ -1,64 +1,55 @@
 $(document).ready(() => {
 
-	let saveEl = $('.save');
-  let previewField = $('.preview-content')[0];
-  let updatedPreview= $('.preview-content');
-  let editorInput = $('textarea.form-control');
-  let table = $('.table');
-  let newFile = $('.new-file');
-  let fileName = $('.filename');
-	let tableRow = $('tr');
-
-  updateInput(editorInput, previewField);
-  addNewFile(table, editorInput, updatedPreview, newFile, fileName);
-  saveFile(saveEl, fileName, editorInput, tableRow, updatedPreview);
-	populateText(tableRow, editorInput, updatedPreview);
+  updateTextInPreview();
+  addNewFile();
+  saveFile();
+	readSelectedFile();
 
 });
 
-// Write in the preview pane.
-function updateInput(input, preview) {
-  input.keyup(function () {
-    preview.innerHTML = marked(this.value);
+function updateTextInPreview() {
+  $('textarea.form-control').keyup(function () {
+    $('.preview-content')[0].innerHTML = marked(this.value);
   });
 }
 
-function addNewFile(tableEl, editorEl, previewEl, addFileEl, fileName) {
-  let idx = addFileEl.index(this);
+function addNewFile() {
+	let table = $('.table');
+	let textarea = $('textarea.form-control')[0];
+	let previewPanel = $('.preview-content');
+	let currentFileName = $('.filename')
 
-  addFileEl.on('click', function () {
+  $('.new-file').on('click', function () {
+		previewPanel.text('');
+		textarea.value = '';
 
-		previewEl.text('');
-		editorEl.text('');
+		table.find('tr:last').before('<tr><td>untitled.md<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
+  	currentFileName.html('untitled.md');
 
-		tableEl.find('tr:last').before('<tr><td>untitled.md<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
-  	fileName.html('untitled.md');
-
+		// Delay prompt for new file name to allow the added row to update with 'untitled.md' first
 		let newFileName = new Promise((resolve) => {
 			setTimeout( () => {
 				let fileStr = prompt('Name your markdown file');
-				if(fileStr == '') { fileStr = 'untitled.md'; }
+				if(fileStr === '') { fileStr = 'untitled.md'; }
 				resolve(fileStr);
 				}, 300);
 			});
 
-    newFileName.then( (result) => {
+		// Add chosen filename to new row element
+    newFileName.then((result) => {
       let str = '<tr><td>' + result + '<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>';
-      tableEl.find('tr:last').prev().replaceWith(str);
-      fileName.text(result);
+      table.find('tr:last').prev().replaceWith(str);
+      currentFileName.text(result);
     });
   });
 }
 
-function saveFile(saveBtn, fileName, editorContent, tableRow, updatedPreview) {
-  saveBtn.click(function () {
-		let editorData = editorContent[0].value;
-		console.log(editorData);
-		let data = { data: editorData,
-		 						 file: fileName[0].textContent
-							 };
-
-		console.log(data);
+function saveFile() {
+  $('.save').click(function () {
+		let data = {
+			data: $('textarea.form-control')[0].value,
+			file: $('.filename')[0].textContent
+		};
 
 		fetch('/newfile', {
 			method: 'post',
@@ -68,28 +59,28 @@ function saveFile(saveBtn, fileName, editorContent, tableRow, updatedPreview) {
 			},
 			body: JSON.stringify(data)
 		})
-		.then(function(response) {
-			console.log(response);
-			populateText(tableRow, editorContent, updatedPreview);
-		})
+		.then(() => {
+      readSelectedFile();
+    })
 		.catch(function(e) {
-			console.log(e);
+			console.log('There was an error ' + e);
 		})
 	});
 }
 
-function populateText(rowElem, editorElem, previewElem) {
-	rowElem.click(function () {
+function readSelectedFile() {
+	$('tr').click(function () {
 		let text = (this.innerText).toLowerCase();
-		let filename = /^.*(?=(\.md))/.exec(text)[0];
-		let url = '/' + filename;
+		let params = /^.*(?=(\.md))/.exec(text)[0];
+		let url = '/' + params;
 
 		fetch(url).then(function(response) {
 			return response.text();
 		}).then(function(content) {
-			let markedText = marked(content);
-			editorElem.text(content);
-			previewElem.html(markedText);
+      readSelectedFile()
+			$('textarea.form-control')[0].value = content;
+			$('.preview-content').html(marked(content));
+      $('.filename').text(text);
 		});
 	});
 }
