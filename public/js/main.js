@@ -9,43 +9,46 @@ $(document).ready(() => {
   let fileName = $('.filename');
 	let tableRow = $('tr');
 
-  updateInput(editorInput, previewField);
-  addNewFile(table, editorInput, updatedPreview, newFile, fileName);
+  updateTextInPreview();
+  addNewFile();
   saveFile(saveEl, fileName, editorInput, tableRow, updatedPreview);
 	populateText(tableRow, editorInput, updatedPreview);
 
 });
 
-// Write in the preview pane.
-function updateInput(input, preview) {
-  input.keyup(function () {
-    preview.innerHTML = marked(this.value);
+function updateTextInPreview() {
+  $('textarea.form-control').keyup(function () {
+    $('.preview-content')[0].innerHTML = marked(this.value);
   });
 }
 
-function addNewFile(tableEl, editorEl, previewEl, addFileEl, fileName) {
-  let idx = addFileEl.index(this);
+function addNewFile() {
+	let table = $('.table');
+	let textarea = $('textarea.form-control')[0];
+	let previewPanel = $('.preview-content');
+	let currentFileName = $('.filename')
 
-  addFileEl.on('click', function () {
+  $('.new-file').on('click', function () {
+		previewPanel.text('');
+		textarea.value = '';
 
-		previewEl.text('');
-		editorEl.text('');
+		table.find('tr:last').before('<tr><td>untitled.md<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
+  	currentFileName.html('untitled.md');
 
-		tableEl.find('tr:last').before('<tr><td>untitled.md<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
-  	fileName.html('untitled.md');
-
+		// Delay prompt for new file name to allow the added row to update with 'untitled.md' first
 		let newFileName = new Promise((resolve) => {
 			setTimeout( () => {
 				let fileStr = prompt('Name your markdown file');
-				if(fileStr == '') { fileStr = 'untitled.md'; }
+				if(fileStr === '') { fileStr = 'untitled.md'; }
 				resolve(fileStr);
 				}, 300);
 			});
 
-    newFileName.then( (result) => {
+		// Add chosen filename to new row element
+    newFileName.then((result) => {
       let str = '<tr><td>' + result + '<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>';
-      tableEl.find('tr:last').prev().replaceWith(str);
-      fileName.text(result);
+      table.find('tr:last').prev().replaceWith(str);
+      currentFileName.text(result);
     });
   });
 }
