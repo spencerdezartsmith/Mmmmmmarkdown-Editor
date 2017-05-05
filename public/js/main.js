@@ -1,18 +1,9 @@
 $(document).ready(() => {
 
-	let saveEl = $('.save');
-  let previewField = $('.preview-content')[0];
-  let updatedPreview= $('.preview-content');
-  let editorInput = $('textarea.form-control');
-  let table = $('.table');
-  let newFile = $('.new-file');
-  let fileName = $('.filename');
-	let tableRow = $('tr');
-
   updateTextInPreview();
   addNewFile();
-  saveFile(saveEl, fileName, editorInput, tableRow, updatedPreview);
-	populateText(tableRow, editorInput, updatedPreview);
+  saveFile();
+	readSelectedFile();
 
 });
 
@@ -53,15 +44,13 @@ function addNewFile() {
   });
 }
 
-function saveFile(saveBtn, fileName, editorContent, tableRow, updatedPreview) {
-  saveBtn.click(function () {
-		let editorData = editorContent[0].value;
-		console.log(editorData);
-		let data = { data: editorData,
-		 						 file: fileName[0].textContent
-							 };
+function saveFile() {
+  $('.save').click(function () {
 
-		console.log(data);
+		let data = {
+			data: $('textarea.form-control')[0].value,
+			file: $('.filename')[0].textContent
+		};
 
 		fetch('/newfile', {
 			method: 'post',
@@ -72,27 +61,27 @@ function saveFile(saveBtn, fileName, editorContent, tableRow, updatedPreview) {
 			body: JSON.stringify(data)
 		})
 		.then(function(response) {
-			console.log(response);
-			populateText(tableRow, editorContent, updatedPreview);
+			readSelectedFile();
 		})
 		.catch(function(e) {
-			console.log(e);
+			console.log('There was an error ' + e);
 		})
 	});
 }
 
-function populateText(rowElem, editorElem, previewElem) {
-	rowElem.click(function () {
+function readSelectedFile() {
+	$('tr').click(function () {
+    console.log('you clicked me')
 		let text = (this.innerText).toLowerCase();
-		let filename = /^.*(?=(\.md))/.exec(text)[0];
-		let url = '/' + filename;
+		let params = /^.*(?=(\.md))/.exec(text)[0];
+		let url = '/' + params;
 
 		fetch(url).then(function(response) {
 			return response.text();
 		}).then(function(content) {
-			let markedText = marked(content);
-			editorElem.text(content);
-			previewElem.html(markedText);
+			$('textarea.form-control').text(content);
+			$('.preview-content').html(marked(content));
+      $('.filename').text(text);
 		});
 	});
 }
