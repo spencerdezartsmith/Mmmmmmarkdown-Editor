@@ -11,7 +11,7 @@ $(document).ready(() => {
 
   updateInput(editorInput, previewField);
   addNewFile(table, editorInput, updatedPreview, newFile, fileName);
-  saveFile(saveEl, fileName, previewField);
+  saveFile(saveEl, fileName, editorInput, tableRow, updatedPreview);
 	populateText(tableRow, editorInput, updatedPreview);
 
 });
@@ -50,11 +50,11 @@ function addNewFile(tableEl, editorEl, previewEl, addFileEl, fileName) {
   });
 }
 
-function saveFile(saveBtn, fileName, previewContent) {
+function saveFile(saveBtn, fileName, editorContent, tableRow, updatedPreview) {
   saveBtn.click(function () {
-		let trimString = previewContent.textContent;
-		console.log(trimString);
-		let data = { data: trimString,
+		let editorData = editorContent[0].value;
+		console.log(editorData);
+		let data = { data: editorData,
 		 						 file: fileName[0].textContent
 							 };
 
@@ -70,6 +70,7 @@ function saveFile(saveBtn, fileName, previewContent) {
 		})
 		.then(function(response) {
 			console.log(response);
+			populateText(tableRow, editorContent, updatedPreview);
 		})
 		.catch(function(e) {
 			console.log(e);
