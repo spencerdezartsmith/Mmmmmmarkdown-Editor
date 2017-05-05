@@ -66,3 +66,8 @@ Build out multiple-file functionality, and use cookies to remember the last open
 - [X] Markdown content can still be saved to files in data/, with one file in data/ for each file in the sidebar
 - [X] Most recently edited file is tracked using a cookie
 - [X] When visiting the root route (/), users are redirected to the file they last edited
+
+### Stretch
+- [X] Clicking the trash can icon...
+  - [X] Deletes the files from data/ folder
+  - [X] Shows the sidebar updated without the deleted file
