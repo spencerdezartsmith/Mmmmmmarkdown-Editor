@@ -4,6 +4,8 @@ $(document).ready(() => {
   addNewFile();
   saveFile();
 	readSelectedFile();
+  addHighlight();
+
 
 });
 
@@ -20,10 +22,11 @@ function addNewFile() {
 	let currentFileName = $('.filename')
 
   $('.new-file').on('click', function () {
+    $('tr').removeClass('selected')
 		previewPanel.text('');
 		textarea.value = '';
 
-		table.find('tr:last').before('<tr><td>untitled.md<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
+		table.find('tr:last').before('<tr class="selected"><td>untitled.md<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
   	currentFileName.html('untitled.md');
 
 		// Delay prompt for new file name to allow the added row to update with 'untitled.md' first
@@ -37,9 +40,10 @@ function addNewFile() {
 
 		// Add chosen filename to new row element
     newFileName.then((result) => {
-      let str = '<tr><td>' + result + '<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>';
+      let str = '<tr class="selected"><td>' + result + '<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>';
       table.find('tr:last').prev().replaceWith(str);
       currentFileName.text(result);
+      addHighlight();
     });
   });
 }
@@ -83,4 +87,13 @@ function readSelectedFile() {
       $('.filename').text(text);
 		});
 	});
+}
+
+function addHighlight() {
+  $('tr').click(function() {
+    $('tr').removeClass('selected')
+    if (this.innerText !== 'New Text') {
+      this.className = 'selected'
+    }
+  })
 }
