@@ -46,7 +46,6 @@ function addNewFile() {
 
 function saveFile() {
   $('.save').click(function () {
-
 		let data = {
 			data: $('textarea.form-control')[0].value,
 			file: $('.filename')[0].textContent
@@ -60,9 +59,9 @@ function saveFile() {
 			},
 			body: JSON.stringify(data)
 		})
-		.then(function(response) {
-			readSelectedFile();
-		})
+		.then(() => {
+      readSelectedFile();
+    })
 		.catch(function(e) {
 			console.log('There was an error ' + e);
 		})
@@ -71,7 +70,6 @@ function saveFile() {
 
 function readSelectedFile() {
 	$('tr').click(function () {
-    console.log('you clicked me')
 		let text = (this.innerText).toLowerCase();
 		let params = /^.*(?=(\.md))/.exec(text)[0];
 		let url = '/' + params;
@@ -79,7 +77,8 @@ function readSelectedFile() {
 		fetch(url).then(function(response) {
 			return response.text();
 		}).then(function(content) {
-			$('textarea.form-control').text(content);
+      readSelectedFile()
+			$('textarea.form-control')[0].value = content;
 			$('.preview-content').html(marked(content));
       $('.filename').text(text);
 		});
