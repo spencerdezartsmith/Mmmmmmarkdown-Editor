@@ -1,5 +1,14 @@
 $(document).ready(() => {
 
+  // Cookies.remove('file');
+  console.log(Cookies.get('file'));
+
+  if(checkCookie()) {
+    readFileFromCookie(Cookies.get('file'));
+  } else {
+	   readSelectedFile();
+  }
+
   writeInputToPreviewPanel();
   addNewFile();
   saveFile();
@@ -27,21 +36,22 @@ function addNewFile() {
 		table.find('tr:last').before('<tr class="selected"><td>untitled.md<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
   	currentFileName.html('untitled.md');
 
-		// Delay prompt for new file name to allow the added row to update with 'untitled.md' first
+		// Delay prompt for new file name to allow the added row to update with 'untitled.md' first.
 		let newFileName = new Promise((resolve) => {
 			setTimeout( () => {
 				let fileStr = prompt('Name your markdown file');
-				if(fileStr === '') { fileStr = 'untitled.md'; }
+				if(fileStr === '' || fileStr === null) { fileStr = 'untitled.md'; }
 				resolve(fileStr);
 				}, 300);
 			});
 
-		// Add chosen filename to new row element
+		// Add chosen filename to new row element.
     newFileName.then((result) => {
       let str = '<tr class="selected"><td>' + result + '<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>';
       table.find('tr:last').prev().replaceWith(str);
       currentFileName.text(result);
       addHighlight();
+      createCookie(result);
     });
   });
 }
@@ -91,12 +101,35 @@ function addHighlight() {
     $('tr').removeClass('selected')
     if (this.innerText !== 'New Text') {
       this.className = 'selected'
+      createCookie(this.innerText);
     }
   })
 }
 
-// Stips the .md from the saved file name to add the required route param
+// Strips the .md from the saved file name to add the required route param.
 function buildRouteParam(filename) {
 	let params = /^.*(?=(\.md))/.exec(filename)[0];
 	return '/' + params;
+}
+
+function createCookie(fileName) {
+  Cookies.remove('file');
+  Cookies.set('file', fileName, { expires : 2 });
+}
+
+function checkCookie() {
+  return Cookies.get('file') === 'undefined' ? false : true;
+}
+
+function readFileFromCookie(fileName) {
+  let url = buildRouteParam(fileName);
+
+	fetch(url).then(function(response) {
+		return response.text();
+	}).then(function(content) {
+    $(`tr:contains('${fileName}')`).addClass('selected');
+		$('textarea.form-control')[0].value = content;
+		$('.preview-content').html(marked(content));
+    $('.filename').text(fileName);
+	});
 }
