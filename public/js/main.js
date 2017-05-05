@@ -1,13 +1,13 @@
 $(document).ready(() => {
 
-  updateTextInPreview();
+  writeInputToPreviewPanel();
   addNewFile();
   saveFile();
 	readSelectedFile();
   addHighlight();
 });
 
-function updateTextInPreview() {
+function writeInputToPreviewPanel() {
   $('textarea.form-control').keyup(function () {
     $('.preview-content')[0].innerHTML = marked(this.value);
   });
@@ -95,7 +95,7 @@ function addHighlight() {
   })
 }
 
-// This function stips the .md from the saved file name to add the required route param
+// Stips the .md from the saved file name to add the required route param
 function buildRouteParam(filename) {
 	let params = /^.*(?=(\.md))/.exec(filename)[0];
 	return '/' + params;
