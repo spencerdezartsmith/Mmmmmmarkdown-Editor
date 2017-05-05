@@ -1,15 +1,13 @@
 $(document).ready(() => {
 
-  updateTextInPreview();
+  writeInputToPreviewPanel();
   addNewFile();
   saveFile();
 	readSelectedFile();
   addHighlight();
-
-
 });
 
-function updateTextInPreview() {
+function writeInputToPreviewPanel() {
   $('textarea.form-control').keyup(function () {
     $('.preview-content')[0].innerHTML = marked(this.value);
   });
@@ -75,8 +73,7 @@ function saveFile() {
 function readSelectedFile() {
 	$('tr').click(function () {
 		let text = (this.innerText).toLowerCase();
-		let params = /^.*(?=(\.md))/.exec(text)[0];
-		let url = '/' + params;
+		let url = buildRouteParam(text)
 
 		fetch(url).then(function(response) {
 			return response.text();
@@ -96,4 +93,10 @@ function addHighlight() {
       this.className = 'selected'
     }
   })
+}
+
+// Stips the .md from the saved file name to add the required route param
+function buildRouteParam(filename) {
+	let params = /^.*(?=(\.md))/.exec(filename)[0];
+	return '/' + params;
 }
