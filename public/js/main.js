@@ -2,14 +2,17 @@ $(document).ready(() => {
 
 	let saveEl = $('.save');
   let previewField = $('.preview-content')[0];
+  let updatedPreview= $('.preview-content');
   let editorInput = $('textarea.form-control');
   let table = $('.table');
   let newFile = $('.new-file');
   let fileName = $('.filename');
+	let tableRow = $('tr');
 
   updateInput(editorInput, previewField);
-  addNewFile(table, newFile, fileName);
-  saveFile(saveEl, fileName, previewField);
+  addNewFile(table, editorInput, updatedPreview, newFile, fileName);
+  saveFile(saveEl, fileName, editorInput, tableRow, updatedPreview);
+	populateText(tableRow, editorInput, updatedPreview);
 
 });
 
@@ -20,31 +23,38 @@ function updateInput(input, preview) {
   });
 }
 
-function addNewFile(tableEl, addFileEl, fileName) {
+function addNewFile(tableEl, editorEl, previewEl, addFileEl, fileName) {
   let idx = addFileEl.index(this);
 
   addFileEl.on('click', function () {
-	tableEl.find('tr:last').before('<tr><td>untitled.md<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
-  fileName.html('untitled.md');
 
-	let newFileName = new Promise((resolve) => {
-		setTimeout( () => {
-				resolve(prompt('Name your markdown file'));
-			}, 1000);
-		});
+		previewEl.text('');
+		editorEl.text('');
 
-		newFileName.then( (result) => {
-    	let str = '<tr><td>' + result + '<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>';
-    	tableEl.find('tr:last').prev().replaceWith(str);
-			fileName.text(result);
-		});
+		tableEl.find('tr:last').before('<tr><td>untitled.md<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
+  	fileName.html('untitled.md');
+
+		let newFileName = new Promise((resolve) => {
+			setTimeout( () => {
+				let fileStr = prompt('Name your markdown file');
+				if(fileStr == '') { fileStr = 'untitled.md'; }
+				resolve(fileStr);
+				}, 300);
+			});
+
+    newFileName.then( (result) => {
+      let str = '<tr><td>' + result + '<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>';
+      tableEl.find('tr:last').prev().replaceWith(str);
+      fileName.text(result);
+    });
   });
 }
 
-function saveFile(saveBtn, fileName, previewContent) {
+function saveFile(saveBtn, fileName, editorContent, tableRow, updatedPreview) {
   saveBtn.click(function () {
-		let trimString = previewContent.textContent.trim();
-		let data = { data: trimString,
+		let editorData = editorContent[0].value;
+		console.log(editorData);
+		let data = { data: editorData,
 		 						 file: fileName[0].textContent
 							 };
 
@@ -60,9 +70,26 @@ function saveFile(saveBtn, fileName, previewContent) {
 		})
 		.then(function(response) {
 			console.log(response);
+			populateText(tableRow, editorContent, updatedPreview);
 		})
 		.catch(function(e) {
 			console.log(e);
 		})
+	});
+}
+
+function populateText(rowElem, editorElem, previewElem) {
+	rowElem.click(function () {
+		let text = (this.innerText).toLowerCase();
+		let filename = /^.*(?=(\.md))/.exec(text)[0];
+		let url = '/' + filename;
+
+		fetch(url).then(function(response) {
+			return response.text();
+		}).then(function(content) {
+			let markedText = marked(content);
+			editorElem.text(content);
+			previewElem.html(markedText);
+		});
 	});
 }

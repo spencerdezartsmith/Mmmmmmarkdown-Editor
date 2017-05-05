@@ -13,21 +13,33 @@ app.set('view engine', 'pug');
 
 // Set the routes.
 app.get('/', (req, res) => {
-  res.render('index');
+  // Get the markdown files in the data directory.
+  let dir = __dirname + '/data/';
+  fs.readdir(dir, (err, files) => {
+    if (err) {
+      throw err;
+    } else {
+      res.render('index', { files: files });
+    }
+  });
+
+});
+
+app.get('/:file', (req, res) => {
+  let file  = __dirname + '/data/' + req.params.file + '.md';
+
+  Promise.resolve(fs.readFileSync(file, 'utf8'))
+    .then(res.send.bind(res));
 });
 
 app.post('/newfile', (req, res) => {
-  let dataDir = '/Users/jwalia/programming/web-dev/hello-web-servers/data/';
-  let dir = dataDir + req.body.file;
+  let dir = __dirname + '/data/' + req.body.file;
+  let fd = fs.openSync(dir, 'ax+');
 
-  fs.writeFile(dir, req.body.data, { flag: 'wx' }, (error) => {
-    if (error) throw error;
-    console.log(dir + ' has been saved.');
-  });
+  fs.writeSync(fd, req.body.data);
+  fs.close(fd);
 
-  // Success
-  res.render('index');
-
+  res.sendStatus(200);
 });
 
 app.listen(3000, () => {

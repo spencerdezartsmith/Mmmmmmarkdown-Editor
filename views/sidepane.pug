@@ -1,18 +1,14 @@
+//- var filenames = #{files.files}
 div.col-md-2.content.sidepane
   table.table
-    tr 
-      td Groceries.md
-        span
-          i.fa.fa-trash(aria-hidden='true')
-    tr 
-      td Todos.md
-        span
-          i.fa.fa-trash(aria-hidden='true')
-    tr 
-      td ExampleFile.md
-        span
-          i.fa.fa-trash(aria-hidden='true')
+    //- each file in #{files.files}
+    each file in files
+      tr 
+        td=file
+          span
+            i.fa.fa-trash(aria-hidden='true')
     tr 
       td.new-file New File
         span
           i.fa.fa-plus(aria-hidden='true')
+            
