@@ -1,10 +1,10 @@
 $(document).ready(() => {
-
-  if (checkCookie()) {
-    readFileFromCookie(Cookies.get('file'));
-  } else {
-    readSelectedFile();
-  }
+	Cookies.remove('file')
+  // if (checkCookie()) {
+  //   readFileFromCookie(Cookies.get('file'));
+  // } else {
+  //   readSelectedFile();
+  // }
 
   writeInputToPreviewPanel();
   addNewFile();
