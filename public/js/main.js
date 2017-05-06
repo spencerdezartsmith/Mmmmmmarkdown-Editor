@@ -5,7 +5,6 @@ $(document).ready(() => {
   // } else {
   //   readSelectedFile();
   // }
-
   writeInputToPreviewPanel();
   addNewFile();
   saveFile();
@@ -129,7 +128,7 @@ function readFileFromCookie(fileName) {
 	fetch(url).then(function(response) {
 		return response.text();
 	}).then(function(content) {
-		$(`tr:contains('${fileName}')`).addClass('selected');
+		$(`tr.file:contains('${fileName}')`).addClass('selected');
 		$('textarea.form-control')[0].value = content;
 		$('.preview-content').html(marked(content));
 		$('.filename').text(fileName);
