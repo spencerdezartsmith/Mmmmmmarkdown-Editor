@@ -29,6 +29,7 @@ function iniitalizeSidePaneListener() {
       $('table').find('td.selected').removeClass('selected');
       // if yes, trigger new file process
       addNewFile();
+      saveFile();
       // check if delete
     } else if (currentElement.className === 'fa fa-trash') {
       // check if saved
@@ -110,30 +111,7 @@ function saveFile() {
 			console.log('There was an error ' + e);
 		})
 };
-//
-// function saveFile() {
-//   $('.save').click(function () {
-//     let data = {
-//       data: $('textarea.form-control')[0].value,
-//       file: $('.filename')[0].textContent,
-//     };
-//
-// 		fetch('/newfile', {
-// 			method: 'post',
-// 			headers: {
-// 				'Accept': 'application/json',
-// 				'Content-Type': 'application/json'
-// 			},
-// 			body: JSON.stringify(data)
-// 		})
-// 		.then(() => {
-// 			readSelectedFile();
-// 		})
-// 		.catch(function(e) {
-// 			console.log('There was an error ' + e);
-// 		})
-// 	});
-// }
+
 //
 // function onFileClick() {
 // 	let text = (this.innerText).toLowerCase();
