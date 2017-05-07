@@ -23,18 +23,18 @@ function writeInputToPreviewPanel() {
 
 function iniitalizeSidePaneListener() {
   $('table.table').click(function() {
-    let currentElement = event.target;
+    let target = event.target;
     // check if new-file
-    if (currentElement.className === 'new-file') {
+    if (target.className === 'new-file' || target.className == 'fa fa-plus') {
       $('table').find('td.selected').removeClass('selected');
       // if yes, trigger new file process
       addNewFile();
       // check if delete
-    } else if (currentElement.className === 'fa fa-trash') {
-      deleteFile(event.target)
+    } else if (target.className === 'fa fa-trash') {
+      deleteFile(target);
     } else {
       // readSelectedFile
-      addHighlight(currentElement)
+      addHighlight(target);
     }
       // else
 
@@ -100,7 +100,7 @@ function saveFile() {
 		})
 		.then(() => {
       // read the file from the backend
-			console.log('file was saved');
+			console.log('file was created');
 		})
 		.catch(function(e) {
 			console.log('There was an error ' + e);
