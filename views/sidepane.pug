@@ -3,8 +3,8 @@ div.col-md-2.content.sidepane
   table.table
     //- each file in #{files.files}
     each file in files
-      tr.file 
-        td=file
+      tr 
+        td.file=file
           span
             i.fa.fa-trash(aria-hidden='true')
     tr 
