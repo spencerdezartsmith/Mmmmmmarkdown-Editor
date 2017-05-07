@@ -33,7 +33,7 @@ function iniitalizeSidePaneListener() {
     } else if (target.className === 'fa fa-trash') {
       deleteFile(target);
     } else {
-      // readSelectedFile
+      readOnFileClick(target)
       addHighlight(target);
     }
       // else
@@ -75,7 +75,7 @@ function addNewFile() {
       let newTR = $('<tr class="file"><td class="selected">' + result + '<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
       table.find('tr.file:last').replaceWith(newTR);
       currentFileName.text(result);
-      saveFile();
+      createFile();
     })
 }
 
@@ -84,13 +84,28 @@ function addHighlight(elem) {
   elem.className = 'selected';
 }
 
-function saveFile() {
+function createFile() {
+  let url = '/createFile';
   let data = {
         data: $('textarea.form-control')[0].value,
         file: $('.filename')[0].textContent,
       };
 
-  fetch('/createFile', {
+  postToServer(url, data)
+};
+
+function saveFile() {
+  let url = '/saveFile';
+  let data = {
+        data: $('textarea.form-control')[0].value,
+        file: $('.filename')[0].textContent,
+      };
+
+  postToServer(url, data)
+};
+
+function postToServer(url, data) {
+  fetch(url, {
 			method: 'post',
 			headers: {
 				'Accept': 'application/json',
@@ -100,12 +115,12 @@ function saveFile() {
 		})
 		.then(() => {
       // read the file from the backend
-			console.log('file was created');
+			console.log('file was saved');
 		})
 		.catch(function(e) {
 			console.log('There was an error ' + e);
 		})
-};
+}
 
 function deleteFile(elem) {
   let url = buildRouteParam(elem.closest('td').textContent)
@@ -117,19 +132,19 @@ function deleteFile(elem) {
 }
 
 //
-// function onFileClick() {
-// 	let text = (this.innerText).toLowerCase();
-// 	let url = buildRouteParam(text)
-//
-// 	fetch(url).then(function(response) {
-// 		return response.text();
-// 	}).then(function(content) {
-// 		readSelectedFile()
-// 		$('textarea.form-control')[0].value = content;
-// 		$('.preview-content').html(marked(content));
-// 		$('.filename').text(text);
-// 	});
-// }
+function readOnFileClick(file) {
+	let text = (file.innerText).toLowerCase();
+	let url = buildRouteParam(text)
+
+	fetch(url).then(function(response) {
+		return response.text();
+	}).then(function(content) {
+		console.log('returned content from server ' + content)
+		// $('textarea.form-control')[0].value = content;
+		// $('.preview-content').html(marked(content));
+		// $('.filename').text(text);
+	});
+}
 //
 // function readSelectedFile() {
 // 	$('tr.file').click(function() {
