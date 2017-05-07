@@ -34,10 +34,21 @@ app.get('/:file', (req, res) => {
 
 app.post('/createFile', (req, res) => {
   let dir = __dirname + '/data/' + req.body.file;
-  let fd = fs.openSync(dir, 'ax+');
+  let fd = fs.openSync(dir, 'w+');
 
-  fs.writeSync(fd, req.body.data);
+  // fs.writeSync(fd, req.body.data);
   fs.close(fd);
+
+  res.sendStatus(200);
+});
+
+app.post('/saveFile', (req, res) => {
+  let dir = __dirname + '/data/' + req.body.file;
+  // let fd = fs.openSync(dir, 'ax+');
+  //
+  // fs.writeSync(fd, req.body.data);
+  // fs.close(fd);
+  fs.appendFile(dir, req.body.data);
 
   res.sendStatus(200);
 });
