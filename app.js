@@ -32,7 +32,7 @@ app.get('/:file', (req, res) => {
     .then(res.send.bind(res));
 });
 
-app.post('/newfile', (req, res) => {
+app.post('/createFile', (req, res) => {
   let dir = __dirname + '/data/' + req.body.file;
   let fd = fs.openSync(dir, 'ax+');
 
