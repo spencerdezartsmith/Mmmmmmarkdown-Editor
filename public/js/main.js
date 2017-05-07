@@ -5,28 +5,30 @@ $(document).ready(() => {
   // } else {
   //   readSelectedFile();
   // }
-  // writeInputToPreviewPanel();
+  writeInputToPreviewPanel();
   // addNewFile();
   // saveFile();
   // readSelectedFile();
   // addHighlight();
   // deleteFile();
-  iniitalizeSidePaneListener()
+  iniitalizeSidePaneListener();
+  initializeSaveButton();
 });
 
 function writeInputToPreviewPanel() {
   $('textarea.form-control').keyup(function () {
     $('.preview-content')[0].innerHTML = marked(this.value);
   });
-}
+};
 
 function iniitalizeSidePaneListener() {
   $('table.table').click(function() {
     let currentElement = event.target;
     // check if new-file
     if (currentElement.className === 'new-file') {
+      $('table').find('td.selected').removeClass('selected');
       // if yes, trigger new file process
-      addNewFile()
+      addNewFile();
       // check if delete
     } else if (currentElement.className === 'fa fa-trash') {
       // check if saved
@@ -37,7 +39,6 @@ function iniitalizeSidePaneListener() {
       }
     } else {
       // readSelectedFile
-      console.log($(this))
       addHighlight(currentElement)
     }
       // else
@@ -47,6 +48,13 @@ function iniitalizeSidePaneListener() {
           // else alert not saved
       // else highlight, read
   });
+};
+
+function initializeSaveButton() {
+  $('.save').click(function() {
+    console.log('save button clicked')
+    saveFile()
+  })
 };
 
 function addNewFile() {
@@ -76,9 +84,32 @@ function addNewFile() {
 }
 
 function addHighlight(elem) {
-  $('table').find('td.selected').removeClass();
+  $('table').find('td.selected').removeClass('selected');
   elem.className = 'selected';
 }
+
+function saveFile() {
+  let data = {
+        data: $('textarea.form-control')[0].value,
+        file: $('.filename')[0].textContent,
+      };
+
+  fetch('/createFile', {
+			method: 'post',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		})
+		.then(() => {
+      // read the file from the backend
+			console.log('file was saved');
+		})
+		.catch(function(e) {
+			console.log('There was an error ' + e);
+		})
+};
 //
 // function saveFile() {
 //   $('.save').click(function () {
@@ -125,17 +156,7 @@ function addHighlight(elem) {
 // 	});
 // }
 //
-// function addHighlight() {
-// 	$('tr').click(function() {
-// 		alert('add highlight was clicked')
-// 		$('tr').removeClass('selected')
-// 		if (this.innerText !== 'New Text') {
-// 			this.className = 'selected'
-// 			createCookie(this.innerText);
-// 		}
-// 	})
-// }
-//
+
 // // Strips the .md from the saved file name to add the required route param.
 // function buildRouteParam(filename) {
 // 	return '/' + filename.replace(/\.md$/, '');
