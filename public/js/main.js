@@ -29,15 +29,9 @@ function iniitalizeSidePaneListener() {
       $('table').find('td.selected').removeClass('selected');
       // if yes, trigger new file process
       addNewFile();
-      saveFile();
       // check if delete
     } else if (currentElement.className === 'fa fa-trash') {
-      // check if saved
-      if (!isSaved) {
-        alert('File has not been saved!')
-      } else {
-        deleteFile
-      }
+      deleteFile(event.target)
     } else {
       // readSelectedFile
       addHighlight(currentElement)
@@ -81,6 +75,7 @@ function addNewFile() {
       let newTR = $('<tr class="file"><td class="selected">' + result + '<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
       table.find('tr.file:last').replaceWith(newTR);
       currentFileName.text(result);
+      saveFile();
     })
 }
 
@@ -112,6 +107,15 @@ function saveFile() {
 		})
 };
 
+function deleteFile(elem) {
+  let url = buildRouteParam(elem.closest('td').textContent)
+  fetch(url, {
+    method: 'delete'
+  }).then(() => {
+    elem.closest('tr').remove();
+  })
+}
+
 //
 // function onFileClick() {
 // 	let text = (this.innerText).toLowerCase();
@@ -136,9 +140,9 @@ function saveFile() {
 //
 
 // // Strips the .md from the saved file name to add the required route param.
-// function buildRouteParam(filename) {
-// 	return '/' + filename.replace(/\.md$/, '');
-// }
+function buildRouteParam(filename) {
+	return '/' + filename.replace(/\.md$/, '');
+}
 //
 // function createCookie(fileName) {
 // 	Cookies.remove('file');
