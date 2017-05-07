@@ -22,13 +22,13 @@ function writeInputToPreviewPanel() {
 
 function iniitalizeSidePaneListener() {
   $('table.table').click(function() {
-    let element = event.target;
+    let currentElement = event.target;
     // check if new-file
-    if (element.className === 'new-file') {
+    if (currentElement.className === 'new-file') {
       // if yes, trigger new file process
       addNewFile()
       // check if delete
-    } else if (element.className === 'fa fa-trash') {
+    } else if (currentElement.className === 'fa fa-trash') {
       // check if saved
       if (!isSaved) {
         alert('File has not been saved!')
@@ -36,8 +36,9 @@ function iniitalizeSidePaneListener() {
         deleteFile
       }
     } else {
-      readSelectedFile
-      addHighlight
+      // readSelectedFile
+      console.log($(this))
+      addHighlight(currentElement)
     }
       // else
 
@@ -55,7 +56,7 @@ function addNewFile() {
   $('.preview-content').text('');
   $('textarea.form-control')[0].value = '';
   // create new element
-  let newTR = $('<tr class="selected file"><td>untitled.md<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
+  let newTR = $('<tr class="file"><td class="selected">untitled.md<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
   table.find('tr:last').before(newTR);
   currentFileName.html('untitled.md');
 
@@ -68,13 +69,16 @@ function addNewFile() {
       }, 300);
     })
     .then((result) => {
-      let newTR = $('<tr class="selected file"><td>' + result + '<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
+      let newTR = $('<tr class="file"><td class="selected">' + result + '<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
       table.find('tr.file:last').replaceWith(newTR);
       currentFileName.text(result);
     })
 }
 
-function()
+function addHighlight(elem) {
+  $('table').find('td.selected').removeClass();
+  elem.className = 'selected';
+}
 //
 // function saveFile() {
 //   $('.save').click(function () {
