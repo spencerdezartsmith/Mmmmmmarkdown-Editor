@@ -50,12 +50,10 @@ function iniitalizeSidePaneListener() {
 
 function addNewFile() {
   let table = $('.table');
-  let textarea = $('textarea.form-control')[0];
-  let previewPanel = $('.preview-content');
   let currentFileName = $('.filename');
   // clear out panels
-  previewPanel.text('');
-  textarea.value = '';
+  $('.preview-content').text('');
+  $('textarea.form-control')[0].value = '';
   // create new element
   let newTR = $('<tr class="selected file"><td>untitled.md<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
   table.find('tr:last').before(newTR);
