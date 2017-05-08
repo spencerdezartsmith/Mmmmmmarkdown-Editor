@@ -33,7 +33,7 @@ function iniitalizeSidePaneListener() {
     } else if (target.className === 'fa fa-trash') {
       deleteFile(target);
     } else {
-      readOnFileClick(target)
+      onFileClick(target);
       addHighlight(target);
     }
       // else
@@ -132,18 +132,21 @@ function deleteFile(elem) {
 }
 
 //
-function readOnFileClick(file) {
+function onFileClick(file) {
 	let text = (file.innerText).toLowerCase();
-	let url = buildRouteParam(text)
+	let url = buildRouteParam(text);
 
 	fetch(url).then(function(response) {
 		return response.text();
 	}).then(function(content) {
 		console.log('returned content from server ' + content)
-		// $('textarea.form-control')[0].value = content;
-		// $('.preview-content').html(marked(content));
-		// $('.filename').text(text);
+    loadFileContents(content);
 	});
+}
+
+function loadFileContents(fileContent) {
+  $('textarea').val(fileContent);
+  $('.preview-content').html(marked(fileContent));
 }
 //
 // function readSelectedFile() {
