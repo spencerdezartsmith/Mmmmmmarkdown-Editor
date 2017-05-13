@@ -48,7 +48,7 @@ app.post('/saveFile', (req, res) => {
   //
   // fs.writeSync(fd, req.body.data);
   // fs.close(fd);
-  fs.appendFile(dir, req.body.data);
+  fs.writeFile(dir, req.body.data);
 
   res.sendStatus(200);
 });
