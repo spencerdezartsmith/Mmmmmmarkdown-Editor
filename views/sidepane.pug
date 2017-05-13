@@ -3,12 +3,12 @@ div.col-md-2.content.sidepane
   table.table
     //- each file in #{files.files}
     each file in files
-      tr.file 
-        td=file
+      tr 
+        td.file=file
           span
-            i.fa.fa-trash(aria-hidden='true')
+            i.fa.fa-trash(aria-hidden='true')#delete
     tr 
-      td.new-file New File
+      td#addnew.new-file New File
         span
-          i.fa.fa-plus(aria-hidden='true')
+          i.fa.fa-plus(aria-hidden='true')#plus
             
