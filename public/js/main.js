@@ -1,18 +1,8 @@
 $(document).ready(() => {
-	Cookies.remove('file')
-  // if (checkCookie()) {
-  //   readFileFromCookie(Cookies.get('file'));
-  // } else {
-  //   readSelectedFile();
-  // }
   writeInputToPreviewPanel();
-  // addNewFile();
-  // saveFile();
-  // readSelectedFile();
-  // addHighlight();
-  // deleteFile();
   iniitalizeSidePaneListener();
   initializeSaveButton();
+  cookieCheck();
 });
 
 function writeInputToPreviewPanel() {
@@ -24,24 +14,17 @@ function writeInputToPreviewPanel() {
 function iniitalizeSidePaneListener() {
   $('table.table').click(function() {
     let target = event.target;
-    // check if new-file
-    if (target.className === 'new-file' || target.className == 'fa fa-plus') {
+    // check if new file was clicked
+    if (target.id === 'addnew' || target.id == 'plus') {
       $('table').find('td.selected').removeClass('selected');
-      // if yes, trigger new file process
       addNewFile();
-      // check if delete
-    } else if (target.className === 'fa fa-trash') {
+    } else if (target.id === 'delete') {
       deleteFile(target);
-    } else {
+    } else if (target.className === 'file') {
+			// no catch all. be more specific
       onFileClick(target);
       addHighlight(target);
     }
-      // else
-
-          // if yes,
-            // if yes, delete
-          // else alert not saved
-      // else highlight, read
   });
 };
 
@@ -82,6 +65,7 @@ function addNewFile() {
 function addHighlight(elem) {
   $('table').find('td.selected').removeClass('selected');
   elem.className = 'selected';
+  Cookies.set('currentFile', elem.innerText, { expires: 7 });
 }
 
 function createFile() {
@@ -131,9 +115,14 @@ function deleteFile(elem) {
   })
 }
 
-//
 function onFileClick(file) {
-	let text = (file.innerText).toLowerCase();
+  let text;
+  if (typeof file === "string") {
+    text = file;
+  } else {
+    text = (file.innerText).toLowerCase();
+  };
+  console.log('this is the text', text)
 	let url = buildRouteParam(text);
 
 	fetch(url).then(function(response) {
@@ -148,55 +137,18 @@ function loadFileContents(fileContent) {
   $('textarea').val(fileContent);
   $('.preview-content').html(marked(fileContent));
 }
-//
-// function readSelectedFile() {
-// 	$('tr.file').click(function() {
-// 		alert('read selected file was clicked')
-// 		onFileClick
-// 	});
-// }
-//
 
-// // Strips the .md from the saved file name to add the required route param.
+// Strips the .md from the saved file name to add the required route param.
 function buildRouteParam(filename) {
 	return '/' + filename.replace(/\.md$/, '');
 }
-//
-// function createCookie(fileName) {
-// 	Cookies.remove('file');
-// 	Cookies.set('file', fileName, { expires : 2 });
-// }
-//
-// function checkCookie() {
-// 	return Cookies.get('file') === 'undefined' ? false : true;
-// }
-//
-// function readFileFromCookie(fileName) {
-// 	let url = buildRouteParam(fileName);
-//
-// 	fetch(url).then(function(response) {
-// 		return response.text();
-// 	}).then(function(content) {
-// 		$(`tr.file:contains('${fileName}')`).addClass('selected');
-// 		$('textarea.form-control')[0].value = content;
-// 		$('.preview-content').html(marked(content));
-// 		$('.filename').text(fileName);
-// 	});
-// }
-//
-// function deleteFile() {
-//   $('i.fa.fa-trash').click(function(event) {
-// 		alert('delete file was clicked')
-//     // event.stopPropagation()
-//     let fileName = $('i.fa.fa-trash').parent().parent()[0].textContent;
-//     let url = buildRouteParam(fileName);
-//
-//     fetch(url, {
-//       method: 'delete'
-//     }).then(() => {
-//       $(this).closest('tr').remove();
-//       $('textarea.form-control').val('');
-//       $('.preview-content').html('');
-//     })
-//   });
-// }
+
+// Implement cookies
+function cookieCheck() {
+  if (Cookies.get()) {
+    let fileStr = Cookies.get().currentFile;
+    let cookieElem = $(`td:contains('${fileStr}')`)[0];
+    onFileClick(fileStr);
+    addHighlight(cookieElem);
+  }
+}
