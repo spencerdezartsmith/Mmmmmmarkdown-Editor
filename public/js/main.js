@@ -2,7 +2,6 @@ $(document).ready(() => {
   writeInputToPreviewPanel();
   iniitalizeSidePaneListener();
   initializeSaveButton();
-  cookieCheck();
 });
 
 function writeInputToPreviewPanel() {
@@ -63,8 +62,7 @@ function addNewFile() {
 
 function addHighlight(elem) {
   $('table').find('td.selected').removeClass('selected');
-  elem.className = 'selected';
-  Cookies.set('currentFile', elem.innerText, { expires: 7 });
+  elem.className = 'file selected';
 }
 
 function createFile() {
@@ -83,7 +81,6 @@ function saveFile() {
         data: $('textarea.form-control')[0].value,
         file: $('.filename')[0].textContent,
       };
-
   postToServer(url, data)
 };
 
@@ -122,6 +119,7 @@ function onFileClick(file) {
     text = (file.innerText).toLowerCase();
   };
 	let url = buildRouteParam(text);
+  changeHeaderFilename(text)
 
 	fetch(url).then(function(response) {
 		return response.text();
@@ -133,6 +131,9 @@ function onFileClick(file) {
 function loadFileContents(fileContent) {
   $('textarea').val(fileContent);
   $('.preview-content').html(marked(fileContent));
+  Countable.live($('textarea')[0], function (counter) {
+    $('#live-count')[0].textContent = counter.words;
+  })
 }
 
 // Strips the .md from the saved file name to add the required route param.
@@ -140,12 +141,8 @@ function buildRouteParam(filename) {
 	return '/' + filename.replace(/\.md$/, '');
 }
 
-// Implement cookies
-function cookieCheck() {
-  if (Cookies.get()) {
-    let fileStr = Cookies.get().currentFile;
-    let cookieElem = $(`td:contains('${fileStr}')`)[0];
-    onFileClick(fileStr);
-    addHighlight(cookieElem);
-  }
+function changeHeaderFilename(filename) {
+  $('.filename')[0].textContent = filename;
 }
+
+// Implement cookies
