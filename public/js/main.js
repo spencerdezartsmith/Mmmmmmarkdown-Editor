@@ -30,7 +30,6 @@ function iniitalizeSidePaneListener() {
 
 function initializeSaveButton() {
   $('.save').click(function() {
-    console.log('save button clicked')
     saveFile()
   })
 };
@@ -122,13 +121,11 @@ function onFileClick(file) {
   } else {
     text = (file.innerText).toLowerCase();
   };
-  console.log('this is the text', text)
 	let url = buildRouteParam(text);
 
 	fetch(url).then(function(response) {
 		return response.text();
 	}).then(function(content) {
-		console.log('returned content from server ' + content)
     loadFileContents(content);
 	});
 }
