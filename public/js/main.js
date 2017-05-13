@@ -40,7 +40,7 @@ function addNewFile() {
   $('.preview-content').text('');
   $('textarea.form-control')[0].value = '';
   // create new element
-  let newTR = $('<tr class="file"><td class="selected">untitled.md<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
+  let newTR = $('<tr><td class="selected file">untitled.md<span><i id="delete" class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
   table.find('tr:last').before(newTR);
   currentFileName.html('untitled.md');
 
@@ -53,8 +53,8 @@ function addNewFile() {
       }, 300);
     })
     .then((result) => {
-      let newTR = $('<tr class="file"><td class="selected">' + result + '<span><i class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
-      table.find('tr.file:last').replaceWith(newTR);
+      let newTR = $('<tr><td class="selected file">' + result + '<span><i id="delete" class="fa fa-trash" aria-hidden="true"></i></span></td></tr>');
+      table.find('td.file:last').closest('tr').replaceWith(newTR);
       currentFileName.text(result);
       createFile();
     })
