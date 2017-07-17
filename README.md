@@ -10,7 +10,7 @@ This is a markdown editor where the user is able to create .md files locally and
 
 ## Screenshots
 
-<img src="http://i.imgur.com/lQKGE4W.png" alt="alt text" width="200" height="170"><img src="http://i.imgur.com/sHc1JTi.png" alt="alt text" width="200" height="170"><img src="http://i.imgur.com/VEjCYHb.png" alt="alt text" width="200" height="170">
+<img src="http://i.imgur.com/lQKGE4W.png" alt="alt text" width="200" height="170"> <img src="http://i.imgur.com/sHc1JTi.png" alt="alt text" width="200" height="170"> <img src="http://i.imgur.com/VEjCYHb.png" alt="alt text" width="200" height="170">
 
 
 ## Installation Instructions
